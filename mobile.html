@@ -202,101 +202,126 @@
 </div>
 
 <script>
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    document.getElementById('not-supported').style.display = 'block';
+    document.getElementById('text-wrapper').style.display = 'none';
+    document.querySelector('.controls').style.display = 'none';
+  }
 
-let recognition = null;
-let finalTranscript = '';
-let isListening = false;
-let lastFinal = '';
+  let recognition = null;
+  let finalTranscript = '';
+  let isListening = false;
+  let restartTimer = null;
 
-function buildRecognition() {
-  const r = new SpeechRecognition();
+  function buildRecognition() {
+    const r = new SpeechRecognition();
+    r.lang = 'te-IN';
+    r.continuous = false;
+    r.interimResults = true;
+    r.maxAlternatives = 1;
 
-  r.lang = 'te-IN';
-  r.continuous = false;   // ✅ IMPORTANT FIX
-  r.interimResults = true;
-  r.maxAlternatives = 1;
-
-  r.onstart = () => {
-    isListening = true;
-    setStatus('listening', '🎙 వింటున్నాను…');
-    document.getElementById('btn-start').disabled = true;
-    document.getElementById('btn-stop').disabled  = false;
-  };
+    r.onstart = () => {
+      isListening = true;
+      setStatus('listening', '🎙 వింటున్నాను…');
+      document.getElementById('text-wrapper').classList.add('listening');
+      document.getElementById('btn-start').disabled = true;
+      document.getElementById('btn-stop').disabled  = false;
+    };
+    let lastFinal = '';
 
   r.onresult = (event) => {
-    let interim = '';
+  let interim = '';
 
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      const t = event.results[i][0].transcript.trim();
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const t = event.results[i][0].transcript.trim();
 
-      if (event.results[i].isFinal) {
+    if (event.results[i].isFinal) {
 
-        // ✅ Skip exact duplicate
-        if (t !== lastFinal) {
-
-          // ✅ Handle overlap safely
-          if (t.startsWith(lastFinal)) {
-            let newPart = t.slice(lastFinal.length).trim();
-            if (newPart.length > 0) {
-              finalTranscript += newPart + ' ';
-            }
-          } else {
-            finalTranscript += t + ' ';
-          }
-
-          lastFinal = t;
-        }
-
-      } else {
-        // ✅ Show only latest interim (clean real-time)
-        interim = t;
+      // ✅ STRICT duplicate filter (MAIN FIX)
+      if (t !== lastFinal && !finalTranscript.endsWith(t)) {
+        finalTranscript += t + ' ';
+        lastFinal = t;
       }
-    }
 
-    document.getElementById('final').innerText = finalTranscript;
-    document.getElementById('interim').innerText = interim;
-  };
-
-  // ✅ Auto restart (fix mobile + Vercel issue)
-  r.onend = () => {
-    if (isListening) {
-      try {
-        recognition.start();
-      } catch (e) {}
     } else {
-      setStatus('idle', 'ఆగింది — ప్రారంభించు నొక్కండి');
-      document.getElementById('btn-start').disabled = false;
-      document.getElementById('btn-stop').disabled  = true;
+      // ✅ Only latest interim (no accumulation)
+      interim = t;
     }
-  };
-
-  return r;
-}
-
-function startListening() {
-  if (isListening) return;
-
-  recognition = buildRecognition();
-
-  try {
-    recognition.start();
-  } catch (e) {
-    setStatus('error', '❌ మైక్రోఫోన్ ప్రారంభించలేకపోయాం');
   }
-}
 
-function stopListening() {
-  isListening = false;
-  if (recognition) {
-    try { recognition.stop(); } catch(e) {}
+  document.getElementById('final').innerText = finalTranscript;
+  document.getElementById('interim').innerText = interim;
+};
+    
+    r.onend = () => {
+  if (isListening) {
+    try {
+      recognition.start(); // ✅ immediate restart (no delay)
+    } catch (e) {}
+  } else {
+    setStatus('idle', 'ఆగింది — కొనసాగించడానికి ప్రారంభించు నొక్కండి');
+    document.getElementById('text-wrapper').classList.remove('listening');
+    document.getElementById('btn-start').disabled = false;
+    document.getElementById('btn-stop').disabled  = true;
   }
-}
+};
 
-function setStatus(type, msg) {
-  const txt = document.getElementById('status-text');
-  txt.textContent = msg;
-}
+  function startListening() {
+    if (isListening) return;
+    recognition = buildRecognition();
+    try { recognition.start(); }
+    catch(e) { setStatus('error', '❌ మైక్రోఫోన్ ప్రారంభించడం సాధ్యం కాలేదు'); }
+  }
+
+  function stopListening() {
+    isListening = false;
+    clearTimeout(restartTimer);
+    if (recognition) { try { recognition.stop(); } catch(e) {} }
+    document.getElementById('dot').classList.remove('pulse');
+  }
+
+  function renderText(interim) {
+    const finalDiv   = document.getElementById('final');
+    const interimDiv = document.getElementById('interim');
+
+    if (finalTranscript.trim() || interim.trim()) {
+      finalDiv.innerHTML   = finalTranscript || '';
+      interimDiv.textContent = interim;
+    } else {
+      finalDiv.innerHTML   = '<span class="placeholder">మీరు మాట్లాడటం ప్రారంభించండి…</span>';
+      interimDiv.textContent = '';
+    }
+
+    const words = (finalTranscript + ' ' + interim).trim().split(/\s+/).filter(Boolean);
+    document.getElementById('word-count').textContent = words.length + ' పదాలు';
+  }
+
+  function copyText() {
+    const text = finalTranscript.trim();
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      const orig = btn.textContent;
+      btn.textContent = '✓ కాపీ అయింది!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  }
+
+  function clearText() {
+    finalTranscript = '';
+    renderText('');
+  }
+
+  function setStatus(type, msg) {
+    const pill = document.getElementById('status-pill');
+    const dot  = document.getElementById('dot');
+    const txt  = document.getElementById('status-text');
+    pill.className     = type === 'listening' ? 'listening' : type === 'error' ? 'error' : '';
+    dot.className      = type === 'listening' ? 'dot pulse' : 'dot';
+    txt.textContent    = msg;
+  }
 </script>
 </body>
 </html>
+give me updated code that runs perfectly
