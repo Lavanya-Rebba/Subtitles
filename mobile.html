@@ -33,7 +33,8 @@
 
   body::before {
     content: '';
-    position: fixed; inset: 0;
+    position: fixed;
+    inset: 0;
     background:
       radial-gradient(ellipse 60% 40% at 80% 10%, rgba(124,77,255,0.10) 0%, transparent 70%),
       radial-gradient(ellipse 50% 35% at 10% 90%, rgba(255,79,139,0.08) 0%, transparent 70%);
@@ -51,14 +52,26 @@
     background-clip: text;
   }
 
-  .tagline { font-size: 13px; color: var(--muted); margin-top: 8px; letter-spacing: 3px; }
+  .tagline {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 3px;
+  }
 
   #status-pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 999px; padding: 8px 20px;
-    font-size: 13px; color: var(--muted); margin-bottom: 28px;
-    transition: all 0.3s; font-family: 'Tiro Telugu', serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    transition: all 0.3s;
+    font-family: 'Tiro Telugu', serif;
   }
   #status-pill.listening { border-color: var(--listening); color: var(--listening); box-shadow: 0 0 18px rgba(0,229,160,0.15); }
   #status-pill.error     { border-color: var(--accent); color: var(--accent); }
@@ -69,38 +82,53 @@
 
   .text-wrapper {
     width: 100%; max-width: 860px;
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 16px; padding: 30px 32px; min-height: 220px;
-    position: relative; transition: border-color 0.3s, box-shadow 0.3s;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px 32px;
+    min-height: 220px;
+    position: relative;
+    transition: border-color 0.3s, box-shadow 0.3s;
   }
   .text-wrapper.listening { border-color: rgba(0,229,160,0.35); box-shadow: 0 0 30px rgba(0,229,160,0.07); }
 
   #final {
     font-family: 'Tiro Telugu', serif;
     font-size: clamp(20px, 3.5vw, 28px);
-    color: var(--text); line-height: 1.85; word-break: break-word; margin-bottom: 8px;
+    color: var(--text);
+    line-height: 1.85;
+    word-break: break-word;
+    margin-bottom: 8px;
   }
   #interim {
     font-family: 'Tiro Telugu', serif;
     font-size: clamp(18px, 3vw, 25px);
-    color: var(--muted); line-height: 1.75; min-height: 36px;
-    font-style: italic; word-break: break-word;
+    color: var(--muted);
+    line-height: 1.75;
+    min-height: 36px;
+    font-style: italic;
+    word-break: break-word;
   }
   .placeholder { color: var(--muted); font-style: italic; }
 
   #word-count {
     position: absolute; bottom: 14px; right: 20px;
-    font-size: 12px; color: var(--muted); font-family: 'Tiro Telugu', serif;
+    font-size: 12px; color: var(--muted);
+    font-family: 'Tiro Telugu', serif;
   }
 
   .controls {
     display: flex; gap: 12px; margin-top: 24px;
-    flex-wrap: wrap; justify-content: center; width: 100%; max-width: 860px;
+    flex-wrap: wrap; justify-content: center;
+    width: 100%; max-width: 860px;
   }
 
   .btn {
-    font-family: 'Tiro Telugu', serif; font-size: 15px; font-weight: 700;
-    border: none; border-radius: 10px; padding: 13px 28px; cursor: pointer; transition: all 0.18s;
+    font-family: 'Tiro Telugu', serif;
+    font-size: 15px; font-weight: 700;
+    border: none; border-radius: 10px;
+    padding: 13px 28px; cursor: pointer;
+    transition: all 0.18s;
   }
   .btn:active { transform: scale(0.96); }
 
@@ -122,14 +150,17 @@
   .tip {
     background: var(--panel); border: 1px solid var(--border);
     border-radius: 10px; padding: 14px 16px;
-    font-size: 13px; color: var(--muted); line-height: 1.7; font-family: 'Tiro Telugu', serif;
+    font-size: 13px; color: var(--muted); line-height: 1.7;
+    font-family: 'Tiro Telugu', serif;
   }
   .tip strong { color: var(--accent); display: block; margin-bottom: 4px; font-size: 12px; }
 
   #not-supported {
-    display: none; background: #1a0010; border: 1px solid var(--accent);
-    border-radius: 12px; padding: 20px 28px; color: var(--accent);
-    text-align: center; max-width: 540px; line-height: 1.8; font-size: 15px;
+    display: none;
+    background: #1a0010; border: 1px solid var(--accent);
+    border-radius: 12px; padding: 20px 28px;
+    color: var(--accent); text-align: center;
+    max-width: 540px; line-height: 1.8; font-size: 15px;
     font-family: 'Tiro Telugu', serif;
   }
 </style>
@@ -148,7 +179,7 @@
 
 <div id="not-supported">
   ⚠️ మీ బ్రౌజర్ వెబ్ స్పీచ్ APIని సపోర్ట్ చేయడం లేదు.<br>
-  దయచేసి Android లో <strong>Google Chrome</strong> లో తెరవండి.
+  దయచేసి Windows లేదా Android లో <strong>Google Chrome</strong> లో తెరవండి.
 </div>
 
 <div class="text-wrapper" id="text-wrapper">
@@ -178,87 +209,61 @@
     document.querySelector('.controls').style.display = 'none';
   }
 
-  let recognition  = null;
-  let isListening  = false;
+  let recognition = null;
+  let finalTranscript = '';
+  let isListening = false;
   let restartTimer = null;
-
-  // savedText = everything committed from past sessions (never touched again)
-  // sessionText = finals gathered in the CURRENT session only
-  let savedText   = '';
-  let sessionText = '';
 
   function buildRecognition() {
     const r = new SpeechRecognition();
-    r.lang            = 'te-IN';
-    r.continuous      = false;  // ← THE KEY FIX for Android Chrome
-                                // Android replays ALL results from index 0 on every
-                                // restart when continuous=true, causing duplicates.
-                                // With continuous=false each session is self-contained.
-    r.interimResults  = true;
+    r.lang = 'te-IN';
+    r.continuous = true;
+    r.interimResults = true;
     r.maxAlternatives = 1;
 
     r.onstart = () => {
-      sessionText = ''; // blank slate — savedText holds everything already committed
+      isListening = true;
       setStatus('listening', '🎙 వింటున్నాను…');
       document.getElementById('text-wrapper').classList.add('listening');
       document.getElementById('btn-start').disabled = true;
       document.getElementById('btn-stop').disabled  = false;
     };
+    let lastFinal = '';
 
-    r.onresult = (event) => {
-      // Rebuild sessionText cleanly from scratch each call.
-      // Safe because continuous=false means a session only ever sees its OWN results.
-      let finalInSession = '';
-      let interim        = '';
+ r.onresult = (event) => {
+  let interim = '';
 
-      for (let i = 0; i < event.results.length; i++) {
-        const t = event.results[i][0].transcript.trim();
-        if (event.results[i].isFinal) {
-          finalInSession += (finalInSession ? ' ' : '') + t;
-        } else {
-          interim = t;
-        }
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const t = event.results[i][0].transcript.trim();
+
+    if (event.results[i].isFinal) {
+      // ✅ Append only if it's not already there
+      if (!finalTranscript.includes(t)) {
+        finalTranscript += t + ' ';
       }
+    } else {
+      // ✅ Always show live interim (real-time typing feel)
+      interim += t;
+    }
+  }
 
-      sessionText = finalInSession;
-      renderText(interim);
-    };
-
+  // 🔥 Show combined result (real-time effect)
+  document.getElementById('final').innerText = finalTranscript;
+  document.getElementById('interim').innerText = interim;
+};
+    
     r.onend = () => {
-      // Commit this session's finals into savedText before restarting
-      if (sessionText) {
-        savedText  += (savedText ? ' ' : '') + sessionText;
-        sessionText = '';
-      }
-
       if (isListening) {
         clearTimeout(restartTimer);
         restartTimer = setTimeout(() => {
-          if (isListening) {
-            try {
-              recognition = buildRecognition(); // fresh instance prevents stale state
-              recognition.start();
-            } catch(e) {}
-          }
-        }, 100);
+          if (isListening) { try { recognition.start(); } catch(e) {} }
+        }, 200);
       } else {
         setStatus('idle', 'ఆగింది — కొనసాగించడానికి ప్రారంభించు నొక్కండి');
         document.getElementById('text-wrapper').classList.remove('listening');
         document.getElementById('btn-start').disabled = false;
         document.getElementById('btn-stop').disabled  = true;
-        renderText('');
       }
-    };
-
-    r.onerror = (e) => {
-      // Only mic-denied is truly fatal
-      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-        isListening = false;
-        setStatus('error', '❌ మైక్రోఫోన్ అనుమతి నిరాకరించబడింది');
-        document.getElementById('btn-start').disabled = false;
-        document.getElementById('btn-stop').disabled  = true;
-      }
-      // no-speech / aborted / network → non-fatal, onend handles restart
     };
 
     return r;
@@ -266,7 +271,6 @@
 
   function startListening() {
     if (isListening) return;
-    isListening = true;
     recognition = buildRecognition();
     try { recognition.start(); }
     catch(e) { setStatus('error', '❌ మైక్రోఫోన్ ప్రారంభించడం సాధ్యం కాలేదు'); }
@@ -276,27 +280,27 @@
     isListening = false;
     clearTimeout(restartTimer);
     if (recognition) { try { recognition.stop(); } catch(e) {} }
+    document.getElementById('dot').classList.remove('pulse');
   }
 
   function renderText(interim) {
     const finalDiv   = document.getElementById('final');
     const interimDiv = document.getElementById('interim');
-    const displayFinal = (savedText + (sessionText ? ' ' + sessionText : '')).trim();
 
-    if (displayFinal || interim) {
-      finalDiv.textContent   = displayFinal;
+    if (finalTranscript.trim() || interim.trim()) {
+      finalDiv.innerHTML   = finalTranscript || '';
       interimDiv.textContent = interim;
     } else {
-      finalDiv.innerHTML     = '<span class="placeholder">మీరు మాట్లాడటం ప్రారంభించండి…</span>';
+      finalDiv.innerHTML   = '<span class="placeholder">మీరు మాట్లాడటం ప్రారంభించండి…</span>';
       interimDiv.textContent = '';
     }
 
-    const words = (displayFinal + ' ' + interim).trim().split(/\s+/).filter(Boolean);
+    const words = (finalTranscript + ' ' + interim).trim().split(/\s+/).filter(Boolean);
     document.getElementById('word-count').textContent = words.length + ' పదాలు';
   }
 
   function copyText() {
-    const text = (savedText + (sessionText ? ' ' + sessionText : '')).trim();
+    const text = finalTranscript.trim();
     if (!text) return;
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.querySelector('.btn-copy');
@@ -307,8 +311,7 @@
   }
 
   function clearText() {
-    savedText   = '';
-    sessionText = '';
+    finalTranscript = '';
     renderText('');
   }
 
@@ -316,9 +319,9 @@
     const pill = document.getElementById('status-pill');
     const dot  = document.getElementById('dot');
     const txt  = document.getElementById('status-text');
-    pill.className  = type === 'listening' ? 'listening' : type === 'error' ? 'error' : '';
-    dot.className   = type === 'listening' ? 'dot pulse' : 'dot';
-    txt.textContent = msg;
+    pill.className     = type === 'listening' ? 'listening' : type === 'error' ? 'error' : '';
+    dot.className      = type === 'listening' ? 'dot pulse' : 'dot';
+    txt.textContent    = msg;
   }
 </script>
 </body>
