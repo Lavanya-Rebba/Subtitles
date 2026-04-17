@@ -217,7 +217,7 @@
   function buildRecognition() {
     const r = new SpeechRecognition();
     r.lang = 'te-IN';
-    r.continuous = false;
+    r.continuous = true;
     r.interimResults = true;
     r.maxAlternatives = 1;
 
@@ -230,42 +230,44 @@
     };
     let lastFinal = '';
 
-  r.onresult = (event) => {
+ r.onresult = (event) => {
   let interim = '';
 
   for (let i = event.resultIndex; i < event.results.length; i++) {
     const t = event.results[i][0].transcript.trim();
 
     if (event.results[i].isFinal) {
-
-      // ✅ STRICT duplicate filter (MAIN FIX)
-      if (t !== lastFinal && !finalTranscript.endsWith(t)) {
+      // ✅ Append only if it's not already there
+      if (!finalTranscript.includes(t)) {
         finalTranscript += t + ' ';
-        lastFinal = t;
       }
-
     } else {
-      // ✅ Only latest interim (no accumulation)
-      interim = t;
+      // ✅ Always show live interim (real-time typing feel)
+      interim += t;
     }
   }
 
+  // 🔥 Show combined result (real-time effect)
   document.getElementById('final').innerText = finalTranscript;
   document.getElementById('interim').innerText = interim;
 };
     
     r.onend = () => {
-  if (isListening) {
-    try {
-      recognition.start(); // ✅ immediate restart (no delay)
-    } catch (e) {}
-  } else {
-    setStatus('idle', 'ఆగింది — కొనసాగించడానికి ప్రారంభించు నొక్కండి');
-    document.getElementById('text-wrapper').classList.remove('listening');
-    document.getElementById('btn-start').disabled = false;
-    document.getElementById('btn-stop').disabled  = true;
+      if (isListening) {
+        clearTimeout(restartTimer);
+        restartTimer = setTimeout(() => {
+          if (isListening) { try { recognition.start(); } catch(e) {} }
+        }, 200);
+      } else {
+        setStatus('idle', 'ఆగింది — కొనసాగించడానికి ప్రారంభించు నొక్కండి');
+        document.getElementById('text-wrapper').classList.remove('listening');
+        document.getElementById('btn-start').disabled = false;
+        document.getElementById('btn-stop').disabled  = true;
+      }
+    };
+
+    return r;
   }
-};
 
   function startListening() {
     if (isListening) return;
@@ -324,4 +326,3 @@
 </script>
 </body>
 </html>
-give me updated code that runs perfectly
