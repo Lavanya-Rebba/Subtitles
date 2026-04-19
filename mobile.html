@@ -228,30 +228,33 @@
       document.getElementById('btn-start').disabled = true;
       document.getElementById('btn-stop').disabled  = false;
     };
-    let lastFinal = '';
 
- r.onresult = (event) => {
-  let interim = '';
-
-  for (let i = event.resultIndex; i < event.results.length; i++) {
-    const t = event.results[i][0].transcript.trim();
-
-    if (event.results[i].isFinal) {
-      // ✅ Append only if it's not already there
-      if (!finalTranscript.includes(t)) {
-        finalTranscript += t + ' ';
+    r.onresult = (event) => {
+      let interim = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const t = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += t + ' ';
+        } else {
+          interim += t;
+        }
       }
-    } else {
-      // ✅ Always show live interim (real-time typing feel)
-      interim += t;
-    }
-  }
+      renderText(interim);
+    };
 
-  // 🔥 Show combined result (real-time effect)
-  document.getElementById('final').innerText = finalTranscript;
-  document.getElementById('interim').innerText = interim;
-};
-    
+    r.onerror = (event) => {
+      if (event.error === 'no-speech') return;
+      if (event.error === 'aborted')   return;
+      if (event.error === 'not-allowed') {
+        setStatus('error', '❌ మైక్రోఫోన్ బ్లాక్ అయింది — అనుమతి ఇవ్వండి');
+        stopListening(); return;
+      }
+      if (event.error === 'network') {
+        setStatus('error', '❌ ఇంటర్నెట్ లేదు — కనెక్షన్ తనిఖీ చేయండి');
+        return;
+      }
+    };
+
     r.onend = () => {
       if (isListening) {
         clearTimeout(restartTimer);
